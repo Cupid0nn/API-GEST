@@ -107,5 +107,3 @@
 - **Descripción**: Elimina un usuario específico. Requiere un token JWT válido.
 
 ---
-
-Estos pasos te guiarán para comprobar el funcionamiento de los endpoints de tu API utilizando Insomnia. Si tienes alguna pregunta adicional o necesitas más detalles, ¡no dudes en decirme!
