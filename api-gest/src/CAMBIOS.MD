@@ -2,48 +2,52 @@
 
 ## Cambios y Mejoras Realizadas en la API de Usuarios
 
-### 1. Uso de Data Transfer Objects (DTOs)
-- **Propósito**: Garantizar la validación y transferencia segura de datos.
-- **Implementación**: Se crearon `CreateUserDto` y `UpdateUserDto`.
-- **Beneficios**: Mejora la validación de los datos antes de su procesamiento y asegura que solo se transfieran los datos necesarios.
+### 1. Implementación de JWT para Autenticación
+- **Propósito**: Mejorar la seguridad de la API mediante la autenticación basada en tokens.
+- **Implementación**: Se añadieron los módulos `@nestjs/jwt` y `@nestjs/passport`, y se configuraron las estrategias de autenticación JWT y Local.
+- **Beneficios**: Proporciona una capa adicional de seguridad y permite la autenticación segura de los usuarios.
 
-### 2. Ajustes en el Controlador `UserController`
-- **Cambio**: Actualizamos el controlador para usar los DTOs en lugar de la entidad `User` directamente.
-- **Manejo de Errores**: Se mejoró el manejo de errores para proporcionar respuestas más informativas y coherentes.
-- **Beneficio**: Mayor seguridad y validación de datos, y respuestas más útiles al cliente.
+### 2. Configuración de Variables de Entorno
+- **Propósito**: Manejar de forma segura las configuraciones sensibles y mejorar la gestión de entornos.
+- **Implementación**: Se creó un archivo `.env` con configuraciones como `DB_TYPE`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`, `DB_SYNCHRONIZE`, `DB_ENTITIES`, `DB_DROP_SCHEMA`, y `JWT_SECRET`.
+- **Beneficios**: Mejora la seguridad y flexibilidad al mantener las configuraciones fuera del código fuente.
 
-### 3. Mejoras en el Servicio `UserService`
-- **Cambio**: Ajustamos `UserService` para utilizar DTOs en los métodos de creación y actualización de usuarios.
-- **Manejo de Errores**: Implementamos un manejo de errores más robusto utilizando excepciones específicas (`NotFoundException`, `InternalServerErrorException`, `BadRequestException`).
-- **Beneficio**: Menor probabilidad de que el servidor se bloquee y mejor manejo de errores.
+### 3. Ajustes en el Módulo de Autenticación (`auth.module.ts`)
+- **Cambio**: Se configuró el módulo de autenticación para usar la variable de entorno `JWT_SECRET`.
+- **Beneficio**: Permite la configuración dinámica del secreto JWT, mejorando la seguridad.
 
-### 4. Ajustes en el Repositorio `UserRepository`
-- **Cambio**: Modificamos `UserRepository` para aceptar y procesar los DTOs, y mejoramos el manejo de errores.
-- **Manejo de Errores**: Uso de excepciones específicas para manejar casos como usuarios no encontrados o errores internos del servidor.
-- **Beneficio**: Código más claro y manejo de errores más efectivo.
+### 4. Creación de Guardianes de Autenticación (`jwt-auth.guard.ts` y `local-auth.guard.ts`)
+- **Propósito**: Proteger las rutas de la API que requieren autenticación.
+- **Implementación**: Se crearon los guardianes `JwtAuthGuard` y `LocalAuthGuard` para manejar la autenticación JWT y Local.
+- **Beneficios**: Asegura que solo los usuarios autenticados puedan acceder a las rutas protegidas.
 
-### 5. Mejoras en la Entidad `User`
-- **Cambio**: Establecimos valores por defecto para los campos `role`, `createdAt` y `updatedAt`.
-- **Beneficio**: Simplifica la creación de nuevos usuarios, ya que no es necesario proporcionar estos valores explícitamente.
+### 5. Ajustes en el Controlador `UserController`
+- **Cambio**: Se protegieron las rutas sensibles usando `@UseGuards(JwtAuthGuard)`.
+- **Beneficio**: Mejora la seguridad al restringir el acceso a usuarios autenticados.
 
-### 6. Ejemplo de JSON para Crear Usuario
-- **Propósito**: Proporcionar un ejemplo de JSON que cumpla con las nuevas validaciones y configuraciones predeterminadas.
+### 6. Ejemplo de Archivo `.env`
+- **Propósito**: Proporcionar un ejemplo de configuración de variables de entorno.
 - **Ejemplo**:
-    ```json
-    {
-      "name": "Carlos Gimenez",
-      "email": "carlos.gimenez@ejemplo.com",
-      "password": "ContraseñaSegura123",
-      "isActive": true
-    }
+    ```plaintext
+    DB_TYPE=postgres
+    DB_HOST=localhost
+    DB_PORT=5432
+    DB_USERNAME=postgres
+    DB_PASSWORD=justicia3025
+    DB_DATABASE=postgres
+    DB_SYNCHRONIZE=true
+    DB_ENTITIES=dist/**/*.entity{.ts,.js}
+    DB_DROP_SCHEMA=true
+    JWT_SECRET=mi_secreto_es_un_gato_negro_con_orejas_de_papel
     ```
 
 ### 7. Resumen de Beneficios Generales
-- **Validación**: Asegura que los datos sean correctos antes de ser procesados.
-- **Seguridad**: Minimiza la exposición de datos sensibles.
+- **Seguridad**: Implementa autenticación basada en tokens y maneja de forma segura las configuraciones sensibles.
+- **Flexibilidad**: Permite configuraciones dinámicas a través de variables de entorno.
+- **Proteger Rutas**: Asegura que solo los usuarios autenticados puedan acceder a las rutas protegidas.
 - **Manejo de Errores**: Proporciona mensajes de error más claros y evita que el servidor se bloquee.
 - **Simplicidad**: Hace que el código sea más fácil de mantener y entender.
 
 ---
 
-Estos cambios mejoran significativamente la robustez, seguridad y eficiencia de la API, asegurando un manejo más adecuado de los datos y una experiencia más coherente para el usuario. Si tienes alguna otra pregunta o necesitas más detalles, ¡no dudes en decirme!
+Estos cambios mejoran significativamente la seguridad, flexibilidad y robustez de la API, asegurando un manejo más adecuado de los datos y una experiencia más coherente para el usuario. Si tienes alguna otra pregunta o necesitas más detalles, ¡no dudes en decirme!

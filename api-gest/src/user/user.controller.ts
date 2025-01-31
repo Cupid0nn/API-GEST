@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../entity/userentity';
 import { CreateUserDto } from '../entity/userdto';
 import { UpdateUserDto } from '../entity/updateuserdto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Importar el guardián JWT
 
 @Controller('user')
 export class UserController {
@@ -10,6 +11,7 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
   @Get()
   async fetchAllUsers(): Promise<User[]> {
     try {
@@ -19,6 +21,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
   @Get(':id')
   async fetchUserById(@Param('id') id: string): Promise<User> {
     try {
@@ -28,6 +31,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
   @Get('email/:email')
   async fetchUserByEmail(@Param('email') email: string): Promise<User> {
     try {
@@ -46,6 +50,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     try {
@@ -55,6 +60,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<void> {
     try {
@@ -69,7 +75,7 @@ export class UserController {
     try {
       return await this.userService.loginUser(email, password);
     } catch (error) {
-      throw new HttpException('Error al iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Error al iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

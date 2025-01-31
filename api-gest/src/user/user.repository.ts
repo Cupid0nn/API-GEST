@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entity/userentity';
 import { CreateUserDto } from '../entity/userdto';
 import { UpdateUserDto } from '../entity/updateuserdto';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserRepository {
   constructor(
@@ -84,14 +85,11 @@ export class UserRepository {
   }
 
   async loginUser(email: string, password: string): Promise<User> {
-    try {
-      const user = await this.userRepository.findOne({ where: { email, password } });
-      if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
-      }
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (user && await bcrypt.compare(password, user.password)) {
       return user;
-    } catch (error) {
-      throw new InternalServerErrorException('Error al iniciar sesi&oacute;n');
     }
+    throw new NotFoundException('Usuario no encontrado');
   }
+  
 }
