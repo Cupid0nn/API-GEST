@@ -28,6 +28,15 @@ export class UserController {
     }
   }
 
+  @Get('email/:email')
+  async fetchUserByEmail(@Param('email') email: string): Promise<User> {
+    try {
+      return await this.userService.fetchUserByEmail(email);
+    } catch (error) {
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+    }
+  }
+
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     try {
@@ -52,6 +61,24 @@ export class UserController {
       return await this.userService.deleteUser(id);
     } catch (error) {
       throw new HttpException('Error al eliminar usuario', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Post('login')
+  async loginUser(@Body('email') email: string, @Body('password') password: string): Promise<User> {
+    try {
+      return await this.userService.loginUser(email, password);
+    } catch (error) {
+      throw new HttpException('Error al iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Post('register')
+  async registerUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    try {
+      return await this.userService.registerUser(createUserDto);
+    } catch (error) {
+      throw new HttpException('Error al registrar usuario', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
