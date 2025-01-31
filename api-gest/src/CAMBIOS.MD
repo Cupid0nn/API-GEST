@@ -32,8 +32,6 @@
     DB_TYPE=postgres
     DB_HOST=localhost
     DB_PORT=5432
-    DB_USERNAME=postgres
-    DB_PASSWORD=justicia3025
     DB_DATABASE=postgres
     DB_SYNCHRONIZE=true
     DB_ENTITIES=dist/**/*.entity{.ts,.js}
@@ -48,6 +46,66 @@
 - **Manejo de Errores**: Proporciona mensajes de error más claros y evita que el servidor se bloquee.
 - **Simplicidad**: Hace que el código sea más fácil de mantener y entender.
 
+## Cómo Comprobar el Funcionamiento con Insomnia
+
+### 1. Crear un Nuevo Usuario
+- **Ruta**: `POST /user/register`
+- **Body**:
+    ```json
+    {
+      "name": "Carlos Gimenez",
+      "email": "carlos.gimenez@ejemplo.com",
+      "password": "ContraseñaSegura123",
+      "isActive": true
+    }
+    ```
+- **Descripción**: Esta ruta permite registrar un nuevo usuario.
+
+### 2. Iniciar Sesión
+- **Ruta**: `POST /auth/login`
+- **Body**:
+    ```json
+    {
+      "email": "carlos.gimenez@ejemplo.com",
+      "password": "ContraseñaSegura123"
+    }
+    ```
+- **Descripción**: Esta ruta permite iniciar sesión y obtener un token JWT.
+- **Resultado Esperado**: 
+    ```json
+    {
+      "access_token": "tu_token_jwt"
+    }
+    ```
+
+### 3. Probar Rutas Protegidas
+- **Agregar el Token JWT**: En Insomnia, configura el encabezado `Authorization` con el valor `Bearer tu_token_jwt` obtenido del inicio de sesión.
+- **Ruta**: `GET /user`
+- **Descripción**: Esta ruta obtiene todos los usuarios. Debe estar protegida y requerir un token JWT válido.
+
+    - **Headers**:
+        ```json
+        {
+          "Authorization": "Bearer tu_token_jwt"
+        }
+        ```
+
+### 4. Actualizar un Usuario
+- **Ruta**: `PUT /user/:id`
+- **Body**:
+    ```json
+    {
+      "name": "Nuevo Nombre",
+      "email": "nuevo.email@ejemplo.com",
+      "isActive": false
+    }
+    ```
+- **Descripción**: Actualiza los detalles de un usuario específico. Requiere un token JWT válido.
+
+### 5. Eliminar un Usuario
+- **Ruta**: `DELETE /user/:id`
+- **Descripción**: Elimina un usuario específico. Requiere un token JWT válido.
+
 ---
 
-Estos cambios mejoran significativamente la seguridad, flexibilidad y robustez de la API, asegurando un manejo más adecuado de los datos y una experiencia más coherente para el usuario. Si tienes alguna otra pregunta o necesitas más detalles, ¡no dudes en decirme!
+Estos pasos te guiarán para comprobar el funcionamiento de los endpoints de tu API utilizando Insomnia. Si tienes alguna pregunta adicional o necesitas más detalles, ¡no dudes en decirme!
