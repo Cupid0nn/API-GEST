@@ -105,5 +105,3 @@
 ### 5. Eliminar un Usuario
 - **Ruta**: `DELETE /user/:id`
 - **Descripción**: Elimina un usuario específico. Requiere un token JWT válido.
-
----
