@@ -11,6 +11,7 @@ async function bootstrap() {
 
   // Usa cors para habilitar las solicitudes CORS
   app.use(cors());
+  
 
   await app.listen(process.env.PORT ?? 3000);
 }

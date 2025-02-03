@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entity/userentity';
 import { CreateUserDto } from '../entity/userdto';
 import { UpdateUserDto } from '../entity/updateuserdto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -86,7 +87,15 @@ export class UserService {
         );
       }
 
-      const user = this.userRepository.create(createUserDto);
+      // Encriptar la contraseña antes de guardar el usuario
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+
+      const user = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+      });
+
       return await this.userRepository.save(user);
     } catch (error) {
       throw new InternalServerErrorException('Error al registrar el usuario');
@@ -95,13 +104,11 @@ export class UserService {
 
   async loginUser(email: string, password: string): Promise<User> {
     try {
-      const user = await this.userRepository.findOne({
-        where: { email, password },
-      });
-      if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
+      const user = await this.userRepository.findOne({ where: { email } });
+      if (user && await bcrypt.compare(password, user.password)) {
+        return user;
       }
-      return user;
+      throw new NotFoundException('Usuario no encontrado');
     } catch (error) {
       throw new InternalServerErrorException('Error al iniciar sesi&oacute;n');
     }

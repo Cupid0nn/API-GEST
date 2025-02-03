@@ -19,12 +19,21 @@ export class UserRepository {
         throw new BadRequestException('El correo electrónico ya está registrado');
       }
 
-      const user = this.userRepository.create(createUserDto);
+      // Encriptar la contraseña antes de guardar el usuario
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+
+      const user = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+      });
+
       return await this.userRepository.save(user);
     } catch (error) {
       throw new InternalServerErrorException('Error al crear el usuario');
     }
   }
+  
 
   async fetchAllUsers(): Promise<User[]> {
     try {
