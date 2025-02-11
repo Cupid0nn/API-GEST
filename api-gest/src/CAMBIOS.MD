@@ -105,3 +105,8 @@
 ### 5. Eliminar un Usuario
 - **Ruta**: `DELETE /user/:id`
 - **Descripción**: Elimina un usuario específico. Requiere un token JWT válido.
+
+
+
+
+Falta comprobar el funcionamiento adecuado de las rutas y agregar redis, luego testing y por ultimo swagger
