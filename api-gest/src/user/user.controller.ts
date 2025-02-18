@@ -59,6 +59,7 @@ export class UserController {
       throw new HttpException('Error al actualizar usuario', HttpStatus.BAD_REQUEST);
     }
   }
+  
 
   @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
   @Delete(':id')

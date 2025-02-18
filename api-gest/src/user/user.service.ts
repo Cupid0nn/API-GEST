@@ -10,12 +10,14 @@ import { User } from '../entity/userentity';
 import { CreateUserDto } from '../entity/userdto';
 import { UpdateUserDto } from '../entity/updateuserdto';
 import * as bcrypt from 'bcrypt';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly userRepository2: UserRepository,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
