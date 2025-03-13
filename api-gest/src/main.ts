@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as morgan from 'morgan';
 import * as cors from 'cors';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +12,17 @@ async function bootstrap() {
 
   // Usa cors para habilitar las solicitudes CORS
   app.use(cors());
-  
+
+  // Configurar Swagger
+  const config = new DocumentBuilder()
+    .setTitle('Hotel Management API')
+    .setDescription('API para la gestión de hoteles')
+    .setVersion('1.0')
+    .addBearerAuth() // Agregar autenticación con JWT si la usas
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }
