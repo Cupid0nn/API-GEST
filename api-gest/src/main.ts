@@ -15,8 +15,8 @@ async function bootstrap() {
 
   // Configurar Swagger
   const config = new DocumentBuilder()
-    .setTitle('Hotel Management API')
-    .setDescription('API para la gestión de hoteles')
+    .setTitle('Api Gest')
+    .setDescription('API para la gestión de Usuarios')
     .setVersion('1.0')
     .addBearerAuth() // Agregar autenticación con JWT si la usas
     .build();
