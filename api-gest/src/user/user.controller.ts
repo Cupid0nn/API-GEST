@@ -1,18 +1,24 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { 
+  Controller, Get, Post, Put, Delete, Param, Body, HttpException, HttpStatus, UseGuards 
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../entity/userentity';
 import { CreateUserDto } from '../entity/userdto';
 import { UpdateUserDto } from '../entity/updateuserdto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Importar el guardián JWT
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Usuarios') // Agrupa los endpoints en Swagger
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
+  @ApiOperation({ summary: 'Obtener todos los usuarios' })
+  @ApiResponse({ status: 200, description: 'Usuarios obtenidos correctamente', type: [User] })
+  @ApiResponse({ status: 500, description: 'Error al obtener usuarios' })
   async fetchAllUsers(): Promise<User[]> {
     try {
       return await this.userService.fetchAllUsers();
@@ -21,8 +27,12 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get(':id')
+  @ApiOperation({ summary: 'Obtener un usuario por ID' })
+  @ApiResponse({ status: 200, description: 'Usuario obtenido correctamente', type: User })
+  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   async fetchUserById(@Param('id') id: string): Promise<User> {
     try {
       return await this.userService.fetchUserById(id);
@@ -31,8 +41,12 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('email/:email')
+  @ApiOperation({ summary: 'Obtener un usuario por email' })
+  @ApiResponse({ status: 200, description: 'Usuario obtenido correctamente', type: User })
+  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   async fetchUserByEmail(@Param('email') email: string): Promise<User> {
     try {
       return await this.userService.fetchUserByEmail(email);
@@ -42,6 +56,9 @@ export class UserController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Crear un nuevo usuario' })
+  @ApiResponse({ status: 201, description: 'Usuario creado correctamente', type: User })
+  @ApiResponse({ status: 400, description: 'Error al crear usuario' })
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     try {
       return await this.userService.createUser(createUserDto);
@@ -50,8 +67,12 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Put(':id')
+  @ApiOperation({ summary: 'Actualizar un usuario' })
+  @ApiResponse({ status: 200, description: 'Usuario actualizado correctamente', type: User })
+  @ApiResponse({ status: 400, description: 'Error al actualizar usuario' })
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     try {
       return await this.userService.updateUser(id, updateUserDto);
@@ -59,10 +80,13 @@ export class UserController {
       throw new HttpException('Error al actualizar usuario', HttpStatus.BAD_REQUEST);
     }
   }
-  
 
-  @UseGuards(JwtAuthGuard) // Proteger la ruta con el guardián JWT
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
+  @ApiOperation({ summary: 'Eliminar un usuario' })
+  @ApiResponse({ status: 200, description: 'Usuario eliminado correctamente' })
+  @ApiResponse({ status: 500, description: 'Error al eliminar usuario' })
   async deleteUser(@Param('id') id: string): Promise<void> {
     try {
       return await this.userService.deleteUser(id);
@@ -72,6 +96,9 @@ export class UserController {
   }
 
   @Post('login')
+  @ApiOperation({ summary: 'Iniciar sesión' })
+  @ApiResponse({ status: 200, description: 'Usuario autenticado correctamente', type: User })
+  @ApiResponse({ status: 500, description: 'Error al iniciar sesión' })
   async loginUser(@Body('email') email: string, @Body('password') password: string): Promise<User> {
     try {
       return await this.userService.loginUser(email, password);
@@ -81,6 +108,9 @@ export class UserController {
   }
 
   @Post('register')
+  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
+  @ApiResponse({ status: 201, description: 'Usuario registrado correctamente', type: User })
+  @ApiResponse({ status: 500, description: 'Error al registrar usuario' })
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     try {
       return await this.userService.registerUser(createUserDto);
