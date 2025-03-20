@@ -3,7 +3,9 @@
 ## Descripción
 
 >[!IMPORTANT]
+>
 _api-gest_ es una API RESTful diseñada para la gestión de usuarios. Este proyecto está creado con NestJS y tiene como objetivo demostrar mis habilidades en el desarrollo de aplicaciones backend para mi portafolio.
+
 
 ## Instalación
 
